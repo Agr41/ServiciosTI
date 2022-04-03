@@ -13,10 +13,13 @@ app.use(express.json());
 
 passport.use(new LocalStrategy(
   async function(username, password, done) {
+
     await client.connect();
     const db = client.db(dbName);
     const collection = db.collection('usuarios');
     await collection.findOne({ usuario: username }, function (err, user) {
+
+
       if (err) { return done(err); }
       if (!user) { return done(null, false); }
       console.log(password);
@@ -37,7 +40,8 @@ router.get('/', function(req, res, next) {
   res.render('login');
 });
 
-router.post('/registro', function(req, res, next){
+router.post('/registro', async function(req, res){
+
   regUser(req.body)
   
     .then(()=>{
@@ -49,20 +53,11 @@ router.post('/registro', function(req, res, next){
     .finally(()=>{
       client.close()
     })
-    const usuario = req.body.usuario;
-    const password = req.body.password;
-    if (usuario == usuario && password == password ){
-    let passwordHash= bcryptjs.hashSync(password,9);
-    console.log("funcionó")
-        console.log((passwordHash));
-        console.log(password)
-    }
-    else {
-    console.log("no funcionó")
-    }
+
 });
 
 async function regUser(datos){
+ 
   await client.connect();
   const db = client.db(dbName);
   const collection = db.collection('usuarios');
@@ -72,6 +67,8 @@ async function regUser(datos){
       password: datos.password
     }
   )
+
+
 }
 
 router.post('/login', 
@@ -82,3 +79,24 @@ router.post('/login',
   });
 
 module.exports = router;
+
+
+
+/*
+const usuario1 = req.body.usuario;
+const password1 = req.body.password;
+if (usuario1 == usuario && password1 == password ){
+let passwordHash= bcryptjs.hashSync(password,9);
+console.log("It worked")
+    console.log((passwordHash));
+    console.log(password)
+}
+else {
+console.log("it didn't work")
+}
+
+
+
+*/
+
+
