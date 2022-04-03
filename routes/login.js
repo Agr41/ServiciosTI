@@ -56,47 +56,39 @@ router.post('/registro', async function(req, res){
 
 });
 
-async function regUser(datos){
- 
+
+
+
+async function regUser(datos, req, res){
+  const password = datos.password;
+  let passwordHash= bcryptjs.hashSync(password,9);
+
   await client.connect();
   const db = client.db(dbName);
   const collection = db.collection('usuarios');
   await collection.insertOne(
     {
       usuario: datos.usuario,
-      password: datos.password
+      password: passwordHash
+
     }
   )
-
-
 }
 
 router.post('/login', 
   passport.authenticate('local', { failureRedirect: '/login' }),
   function(req, res) {
 
+
     res.redirect('/');
   });
+
+
+
 
 module.exports = router;
 
 
 
-/*
-const usuario1 = req.body.usuario;
-const password1 = req.body.password;
-if (usuario1 == usuario && password1 == password ){
-let passwordHash= bcryptjs.hashSync(password,9);
-console.log("It worked")
-    console.log((passwordHash));
-    console.log(password)
-}
-else {
-console.log("it didn't work")
-}
-
-
-
-*/
 
 
