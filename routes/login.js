@@ -39,6 +39,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/registro', function(req, res, next){
   regUser(req.body)
+  
     .then(()=>{
       res.render('login',{info: "Registrado"})
     })
@@ -48,6 +49,17 @@ router.post('/registro', function(req, res, next){
     .finally(()=>{
       client.close()
     })
+    const usuario = req.body.usuario;
+    const password = req.body.password;
+    if (usuario == usuario && password == password ){
+    let passwordHash= bcryptjs.hashSync(password,9);
+    console.log("funcionó")
+        console.log((passwordHash));
+        console.log(password)
+    }
+    else {
+    console.log("no funcionó")
+    }
 });
 
 async function regUser(datos){
@@ -65,17 +77,7 @@ async function regUser(datos){
 router.post('/login', 
   passport.authenticate('local', { failureRedirect: '/login' }),
   function(req, res) {
-    const usuario = req.body.usuario;
-      const password = req.body.password;
-      if (usuario == usuario && password == password ){
-      let passwordHash= bcryptjs.hashSync(password,9);
-      console.log("funcionó")
-          console.log((passwordHash));
-          console.log(password)
-      }
-      else {
-      console.log("no funcionó")
-      }
+
     res.redirect('/');
   });
 
