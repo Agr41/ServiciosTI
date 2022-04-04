@@ -4,10 +4,6 @@ var {client,dbName} = require('../db/mongo');
 var passport = require('passport');
 var LocalStrategy = require('passport-local');
 
-const app = express();
-const bcryptjs = require('bcryptjs');
-app.use(express.urlencoded({extended:false}));
-app.use(express.json());
 
 passport.use(new LocalStrategy(
   async function(username, password, done) {
@@ -54,9 +50,8 @@ router.post('/registro', async function(req, res){
 
 });
 
-async function regUser(datos, req, res){
-  var password = datos.password;
-  let passwordHash= bcryptjs.hashSync(password,9);
+async function regUser(datos){
+
   await client.connect();
   const db = client.db(dbName);
   const collection = db.collection('usuarios');
@@ -85,4 +80,14 @@ module.exports = router;
 
 /*
       password: passwordHash
+
+        var password = datos.password;
+  let passwordHash= bcryptjs.hashSync(password,9);
+
+  
+const app = express();
+const bcryptjs = require('bcryptjs');
+app.use(express.urlencoded({extended:false}));
+app.use(express.json());
+
 */
