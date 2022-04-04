@@ -9,8 +9,6 @@ const bcryptjs = require('bcryptjs');
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
-
-
 passport.use(new LocalStrategy(
   async function(username, password, done) {
 
@@ -56,20 +54,16 @@ router.post('/registro', async function(req, res){
 
 });
 
-
-
-
 async function regUser(datos, req, res){
-  const password = datos.password;
+  var password = datos.password;
   let passwordHash= bcryptjs.hashSync(password,9);
-
   await client.connect();
   const db = client.db(dbName);
   const collection = db.collection('usuarios');
   await collection.insertOne(
     {
       usuario: datos.usuario,
-      password: passwordHash
+      password: datos.password
 
     }
   )
@@ -83,12 +77,12 @@ router.post('/login',
     res.redirect('/');
   });
 
-
-
-
 module.exports = router;
 
 
 
 
 
+/*
+      password: passwordHash
+*/
